@@ -2,23 +2,54 @@ import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
 import $ from 'jquery';
+import InputCustom from './components/InputCustom';
+import ButtonCustom from './components/ButtonCustom';
 
 class App extends Component {
   constructor(){
     super();
-    this.state = {lista : []};
+    this.state = {lista : [],nome:'',email:'',senha:''};
+    this.setNome = this.setNome.bind(this);
+    this.setEmail = this.setEmail.bind(this);
+    this.setSenha = this.setSenha.bind(this);
   }
+
   componentDidMount(){
     $.ajax({
       url:"http://localhost:8080/api/autores",
       dataType: 'json',
       success:function(data){
-        console.log(data);
         this.setState({lista:data}); 
       }.bind(this)  
     })
   } 
+  enviaForm(event){
+    event.preventDefault();
+    console.log("Dados Sendo enviados");
 
+     $.ajax({
+      url:"http://localhost:8080/api/autores",
+      contentType:'application/json',
+      dataType: 'json',
+      type:'post',
+      data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
+      success:function(data){
+        this.setState({lista:data}); 
+      }.bind(this),
+      error: function(data){
+        console.log("erro");
+      }
+    })
+  }
+  setNome(event){
+    this.setState({nome:event.target.value});
+  }
+  setEmail(event){
+        this.setState({email:event.target.value});
+  }
+  setSenha(event){
+    this.setState({senha:event.target.value});
+  }
   render() {
     return (
       <div id="layout">
@@ -47,23 +78,16 @@ class App extends Component {
                   </div>
                   <div className="content" id="content">
                     <div className="pure-form pure-form-aligned">
-                      <form className="pure-form pure-form-aligned">
-                        <div className="pure-control-group">
-                          <label htmlFor="nome">Nome</label> 
-                          <input id="nome" type="text" name="nome" value=""  />                  
-                        </div>
-                        <div className="pure-control-group">
-                          <label htmlFor="email">Email</label> 
-                          <input id="email" type="email" name="email" value=""  />                  
-                        </div>
-                        <div className="pure-control-group">
-                          <label htmlFor="senha">Senha</label> 
-                          <input id="senha" type="password" name="senha"  />                                      
-                        </div>
-                        <div className="pure-control-group">                                  
-                          <label></label> 
-                          <button type="submit" className="pure-button pure-button-primary">Gravar</button>                                    
-                        </div>
+                      <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm.bind(this)} method="post">
+                        
+                        <InputCustom label="Nome" id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} />
+
+                        <InputCustom label="Email" id="email" type="text" name="email" value={this.state.email} onChange={this.setEmail} />
+
+                        <InputCustom label="Senha" id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} />
+                        
+                        <ButtonCustom type="submit" title="Gravar"/>
+
                       </form>             
 
                     </div>  
