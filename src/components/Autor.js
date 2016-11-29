@@ -23,15 +23,15 @@ class FormularioAutor extends Component {
             type: 'post',
             data: JSON.stringify({ nome: this.state.nome, email: this.state.email, senha: this.state.senha }),
             success: (data) => {
-                PubSub.publish('atualiza-lista-autores',data);
+                PubSub.publish('atualiza-lista-autores', data);
                 this.setState({ nome: '', email: '', senha: '' });
             },
             error: (data) => {
-                if(data.status === 400){
+                if (data.status === 400) {
                     new ErrorsHandler().publish(data.responseJSON);
                 }
             },
-            beforeSend: () => PubSub.publish('limpa-erros',{})
+            beforeSend: () => PubSub.publish('limpa-erros', {})
         })
     }
     setNome(event) {
@@ -90,28 +90,34 @@ class TabelaAutores extends Component {
 
 export default class AutorBox extends Component {
     constructor() {
-    super();
-    this.state = { lista: [] };
-  }
+        super();
+        this.state = { lista: [] };
+    }
     componentDidMount() {
-        
-    $.ajax({
-      url: "http://localhost:8080/api/autores",
-      dataType: 'json',
-      success: function (data) {
-        this.setState({ lista: data });
-      }.bind(this)
-    });
-    PubSub.subscribe('atualiza-lista-autores',function(topic,data){
-        this.setState({lista:data})
-    }.bind(this));
-  }
+
+        $.ajax({
+            url: "http://localhost:8080/api/autores",
+            dataType: 'json',
+            success: function (data) {
+                this.setState({ lista: data });
+            }.bind(this)
+        });
+        PubSub.subscribe('atualiza-lista-autores', function (topic, data) {
+            this.setState({ lista: data })
+        }.bind(this));
+    }
 
     render() {
         return (
             <div>
-                <FormularioAutor/>
-                <TabelaAutores lista={this.state.lista}/>
+                <div className="header">
+                    <h3>Cadastro de Autores</h3>
+                </div>
+
+                <div className="content" id="content">
+                    <FormularioAutor />
+                    <TabelaAutores lista={this.state.lista} />
+                </div>
             </div>
         );
     }
