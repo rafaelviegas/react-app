@@ -81,6 +81,7 @@ class TabelaAutores extends Component {
                                 );
                             })
                         }
+
                     </tbody>
                 </table>
             </div>
@@ -102,6 +103,7 @@ export default class AutorBox extends Component {
                 this.setState({ lista: data });
             }.bind(this)
         });
+
         PubSub.subscribe('atualiza-lista-autores', function (topic, data) {
             this.setState({ lista: data })
         }.bind(this));
