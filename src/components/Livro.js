@@ -60,14 +60,19 @@ class FormularioLivro extends Component {
     setAutor = (event) => {
         this.setState({ autorId: event.target.value })
     }
+    salvaAlteracao = (input,event) => {
+        var campo = [];
+            campo[input] = event.target.value;
+        this.setState(campo);
+    }
 
     render() {
         return (
             <div className="pure-form pure-form-aligned">
                 <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm.bind(this)} method="post">
-                    <InputCustom label="Titulo" id="titulo" type="text" name="titulo" value={this.state.titulo} onChange={this.setTitulo} />
-                    <InputCustom label="Preço" id="preco" type="text" name="preco" value={this.state.preco} onChange={this.setPreco} />
-                    <SelectCustom label="Autor" id="autorId" name="autorId" value={this.state.autorId} lista={this.state.autores} onChange={this.setAutor}/>
+                    <InputCustom label="Titulo" id="titulo" type="text" name="titulo" value={this.state.titulo} onChange={this.salvaAlteracao.bind(this,'titulo')} />
+                    <InputCustom label="Preço" id="preco" type="text" name="preco" value={this.state.preco} onChange={this.salvaAlteracao.bind(this,'preco')} />
+                    <SelectCustom label="Autor" id="autorId" name="autorId" value={this.state.autorId} lista={this.state.autores} onChange={this.salvaAlteracao.bind(this,'autorId')}/>
                     <ButtonCustom type="submit" title="Gravar" />
                 </form>
             </div>
